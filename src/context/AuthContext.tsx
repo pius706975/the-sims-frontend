@@ -1,0 +1,100 @@
+import { AuthService } from "@/services/auth.service";
+import {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  useEffect,
+} from "react";
+import { jwtDecode } from "jwt-decode";
+import type { JwtPayload } from "@/types/JwtPayload";
+
+type AuthUser = {
+  name: string;
+  email: string;
+};
+
+interface AuthContextType {
+  accessToken: string | null;
+  user: AuthUser | null;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  login: (email: string, password: string) => Promise<void>;
+  logout: () => Promise<void>;
+  setAccessToken: (token: string | null) => void;
+}
+
+const AuthContext = createContext<AuthContextType | null>(null);
+
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
+  const [accessToken, setAccessToken] = useState<string | null>(null);
+  const [user, setUser] = useState<AuthUser | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // INIT AUTH (RESTORE SESSION)
+  useEffect(() => {
+    const initAuth = async () => {
+      try {
+        const res = await AuthService.refresh();
+        setAuthFromToken(res.access_token);
+      } catch {
+        setAccessToken(null);
+        setUser(null);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    initAuth();
+  }, []);
+
+  const login = async (email: string, password: string) => {
+    const res = await AuthService.login({ email, password });
+    setAuthFromToken(res.access_token);
+  };
+
+  const setAuthFromToken = (token: string) => {
+    const payload = jwtDecode<JwtPayload>(token);
+
+    setAccessToken(token);
+    setUser({
+      name: payload.name,
+      email: payload.email,
+    });
+  };
+
+  const logout = useCallback(async () => {
+    try {
+      await AuthService.logout();
+    } finally {
+      setAccessToken(null);
+      setUser(null);
+    }
+  }, []);
+
+  return (
+    <AuthContext.Provider
+      value={{
+        accessToken,
+        user,
+        isAuthenticated: !!accessToken,
+        isLoading,
+        login,
+        logout,
+        setAccessToken,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
+};
+
+export const useAuth = () => {
+  const ctx = useContext(AuthContext);
+  if (!ctx) {
+    throw new Error("useAuth must be used inside AuthProvider");
+  }
+  return ctx;
+};

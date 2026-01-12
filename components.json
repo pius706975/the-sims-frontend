@@ -17,7 +17,8 @@
     "ui": "@/components/ui",
     "lib": "@/lib",
     "hooks": "@/hooks",
-    "layouts": "@/layouts"
+    "layouts": "@/layouts",
+    "services": "@/services"
   },
   "registries": {}
 }
