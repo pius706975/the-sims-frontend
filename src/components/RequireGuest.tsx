@@ -2,16 +2,16 @@ import { Navigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import type { JSX } from "react";
 
-export default function RequireGuest({ children }: { children: JSX.Element }) {
-  const { isAuthenticated, isLoading } = useAuth();
+const RequireGuest = ({ children }: { children: JSX.Element }) => {
+  const { isAuthenticated } = useAuth();
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+  // if (isLoading) return null;
 
   if (isAuthenticated) {
     return <Navigate to="/" replace />;
   }
 
   return children;
-}
+};
+
+export default RequireGuest;

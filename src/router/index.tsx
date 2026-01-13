@@ -6,41 +6,44 @@ import RequireAuth from "@/components/RequireAuth";
 import RequireGuest from "@/components/RequireGuest";
 import Dashboard from "@/pages/home/dashboard";
 import Employee from "@/pages/home/employee";
+import NotFound from "@/pages/NotFound";
 
 const Router = createBrowserRouter([
   {
-    element: <AuthLayout />,
+    path: "/",
+    element: (
+      <RequireGuest>
+        <AuthLayout />
+      </RequireGuest>
+    ),
     children: [
       {
-        path: "/login",
-        element: (
-          <RequireGuest>
-            <LoginPage />
-          </RequireGuest>
-        ),
+        path: "login",
+        element: <LoginPage />,
       },
     ],
   },
   {
-    element: <BaseLayout />,
+    path: "/",
+    element: (
+      <RequireAuth>
+        <BaseLayout />
+      </RequireAuth>
+    ),
     children: [
       {
-        path: "/",
-        element: (
-          <RequireAuth>
-            <Dashboard />
-          </RequireAuth>
-        ),
+        index: true,
+        element: <Dashboard />,
       },
       {
-        path: "/karyawan",
-        element: (
-          <RequireAuth>
-            <Employee />
-          </RequireAuth>
-        ),
+        path: "karyawan",
+        element: <Employee />,
       },
     ],
+  },
+  {
+    path: "*",
+    element: <NotFound />,
   },
 ]);
 

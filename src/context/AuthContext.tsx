@@ -71,6 +71,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     } finally {
       setAccessToken(null);
       setUser(null);
+      setIsLoading(false);
     }
   }, []);
 

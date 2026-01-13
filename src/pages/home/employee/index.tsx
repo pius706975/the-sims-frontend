@@ -5,7 +5,7 @@ import { useEffect } from "react";
 
 const Employee = () => {
   useEffect(() => {
-    document.title = "Dashboard - SIMS";
+    document.title = "Karyawan - Sistem Informasi Manajemen Sekolah";
   }, []);
 
   return (
@@ -19,7 +19,7 @@ const Employee = () => {
           />
           <AppBreadcrumb
             items={[
-              { label: "Beranda", href: "#" },
+              { label: "Beranda" },
               { label: "Karyawan" },
             ]}
           />
