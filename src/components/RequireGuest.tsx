@@ -10,7 +10,7 @@ export default function RequireGuest({ children }: { children: JSX.Element }) {
   }
 
   if (isAuthenticated) {
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to="/" replace />;
   }
 
   return children;

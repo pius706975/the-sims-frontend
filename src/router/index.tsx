@@ -1,25 +1,13 @@
 import { createBrowserRouter } from "react-router-dom";
-import Home from "@/pages/home";
 import BaseLayout from "@/layouts/BaseLayout";
 import AuthLayout from "@/layouts/AuthLayout";
 import LoginPage from "@/pages/auth/login";
 import RequireAuth from "@/components/RequireAuth";
 import RequireGuest from "@/components/RequireGuest";
+import Dashboard from "@/pages/home/dashboard";
+import Employee from "@/pages/home/employee";
 
 const Router = createBrowserRouter([
-  {
-    element: <BaseLayout />,
-    children: [
-      {
-        path: "/dashboard",
-        element: (
-          <RequireAuth>
-            <Home />
-          </RequireAuth>
-        ),
-      },
-    ],
-  },
   {
     element: <AuthLayout />,
     children: [
@@ -29,6 +17,27 @@ const Router = createBrowserRouter([
           <RequireGuest>
             <LoginPage />
           </RequireGuest>
+        ),
+      },
+    ],
+  },
+  {
+    element: <BaseLayout />,
+    children: [
+      {
+        path: "/",
+        element: (
+          <RequireAuth>
+            <Dashboard />
+          </RequireAuth>
+        ),
+      },
+      {
+        path: "/karyawan",
+        element: (
+          <RequireAuth>
+            <Employee />
+          </RequireAuth>
         ),
       },
     ],
