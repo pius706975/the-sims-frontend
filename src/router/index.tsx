@@ -11,33 +11,37 @@ import NotFound from "@/pages/NotFound";
 const Router = createBrowserRouter([
   {
     path: "/",
-    element: (
-      <RequireGuest>
-        <AuthLayout />
-      </RequireGuest>
-    ),
+    element: <AuthLayout />,
     children: [
       {
         path: "login",
-        element: <LoginPage />,
+        element: (
+          <RequireGuest>
+            <LoginPage />
+          </RequireGuest>
+        ),
       },
     ],
   },
   {
     path: "/",
-    element: (
-      <RequireAuth>
-        <BaseLayout />
-      </RequireAuth>
-    ),
+    element: <BaseLayout />,
     children: [
       {
         index: true,
-        element: <Dashboard />,
+        element: (
+          <RequireAuth>
+            <Dashboard />
+          </RequireAuth>
+        ),
       },
       {
         path: "karyawan",
-        element: <Employee />,
+        element: (
+          <RequireAuth>
+            <Employee />
+          </RequireAuth>
+        ),
       },
     ],
   },
