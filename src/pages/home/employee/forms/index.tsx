@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
-import EmployeeForm from "./Employee";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import EmployeeTypeForm from "./EmployeeType";
+import EmployeePage from "./Employee";
 
 const MainEmployeeForm = () => {
   const tabs = [
     {
       value: "karyawan",
       label: "Karyawan",
-      content: <EmployeeForm />,
+      content: <EmployeePage />,
     },
     {
       value: "tipe_karyawan",
@@ -37,6 +37,7 @@ const TabsWrapper = ({
     setMounted(true);
 
     const savedTab = localStorage.getItem(storageKey);
+    
     if (savedTab && tabs.some((tab) => tab.value === savedTab)) {
       setActiveTab(savedTab);
     } else {
