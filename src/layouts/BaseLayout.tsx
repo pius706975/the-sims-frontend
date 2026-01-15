@@ -6,7 +6,7 @@ const BaseLayout = () => {
   return (
     <SidebarProvider>
       <AppSidebar />
-      <SidebarInset>
+      <SidebarInset className="min-w-0 overflow-x-auto">
         <Outlet />
       </SidebarInset>
     </SidebarProvider>

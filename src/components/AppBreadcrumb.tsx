@@ -35,7 +35,9 @@ const AppBreadcrumb = ({ items }: AppBreadcrumbProps) => {
                 )}
               </BreadcrumbItem>
 
-              {!isLast && <BreadcrumbSeparator className="hidden md:block" />}
+              {!isLast && (
+                <BreadcrumbSeparator className="hidden md:block" />
+              )}
             </div>
           );
         })}

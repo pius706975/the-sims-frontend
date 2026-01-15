@@ -6,13 +6,15 @@ import RequireAuth from "@/components/RequireAuth";
 import RequireGuest from "@/components/RequireGuest";
 import Dashboard from "@/pages/home/dashboard";
 import Employee from "@/pages/home/employee";
+import NotFound from "@/pages/NotFound";
 
 const Router = createBrowserRouter([
   {
+    path: "/",
     element: <AuthLayout />,
     children: [
       {
-        path: "/login",
+        path: "login",
         element: (
           <RequireGuest>
             <LoginPage />
@@ -22,10 +24,11 @@ const Router = createBrowserRouter([
     ],
   },
   {
+    path: "/",
     element: <BaseLayout />,
     children: [
       {
-        path: "/",
+        index: true,
         element: (
           <RequireAuth>
             <Dashboard />
@@ -33,7 +36,7 @@ const Router = createBrowserRouter([
         ),
       },
       {
-        path: "/karyawan",
+        path: "karyawan",
         element: (
           <RequireAuth>
             <Employee />
@@ -41,6 +44,10 @@ const Router = createBrowserRouter([
         ),
       },
     ],
+  },
+  {
+    path: "*",
+    element: <NotFound />,
   },
 ]);
 

@@ -2,10 +2,11 @@ import AppBreadcrumb from "@/components/AppBreadcrumb";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Separator } from "@radix-ui/react-separator";
 import { useEffect } from "react";
+import MainEmployeeForm from "./forms";
 
 const Employee = () => {
   useEffect(() => {
-    document.title = "Dashboard - SIMS";
+    document.title = "Karyawan - Sistem Informasi Manajemen Sekolah";
   }, []);
 
   return (
@@ -18,15 +19,14 @@ const Employee = () => {
             className="mr-2 data-[orientation=vertical]:h-4"
           />
           <AppBreadcrumb
-            items={[
-              { label: "Beranda", href: "#" },
-              { label: "Karyawan" },
-            ]}
+            items={[{ label: "Beranda" }, { label: "Karyawan" }]}
           />
         </div>
       </header>
 
-			<div className="flex flex-1 flex-col gap-4 p-4 pt-0"></div>
+      <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+        <MainEmployeeForm />
+      </div>
     </main>
   );
 };

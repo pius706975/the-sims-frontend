@@ -7,7 +7,15 @@ import {
   useEffect,
 } from "react";
 import { jwtDecode } from "jwt-decode";
-import type { JwtPayload } from "@/types/JwtPayload";
+
+export interface JwtPayload {
+  user_id: string;
+  name: string;
+  email: string;
+  username?: string;
+  is_superuser?: boolean;
+  exp: number;
+}
 
 type AuthUser = {
   name: string;
@@ -71,6 +79,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     } finally {
       setAccessToken(null);
       setUser(null);
+      setIsLoading(false);
     }
   }, []);
 

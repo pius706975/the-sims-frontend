@@ -13,7 +13,6 @@ import {
 import { useAuth } from "@/context/AuthContext";
 import { Brand } from "./Brand";
 
-// This is sample data.
 const data = {
   navMain: [
     {
