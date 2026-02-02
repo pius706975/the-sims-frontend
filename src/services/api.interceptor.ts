@@ -12,7 +12,7 @@ const processQueue = (token: string | null) => {
 export const setupInterceptors = (
   getAccessToken: () => string | null,
   setAccessToken: (token: string | null) => void,
-  logout: () => Promise<void>
+  logout: () => Promise<void>,
 ) => {
   api.interceptors.request.use((config) => {
     const token = getAccessToken();
@@ -26,16 +26,30 @@ export const setupInterceptors = (
     (res) => res,
     async (error) => {
       const originalRequest = error.config;
+      const status = error.response?.status;
+      // const message = error.response?.data?.message;
 
-      if (error.response?.status === 401 && !originalRequest._retry) {
+      const isRefreshRequest = originalRequest.url?.includes(
+        "/auth/create-new-access-token",
+      );
+
+      if (isRefreshRequest && status === 401) {
+        console.warn("Refresh token expired or missing");
+
+        await logout();
+
+        window.location.href = "/login";
+
+        return Promise.reject(error);
+      }
+
+      if (status === 401 && !originalRequest._retry) {
         originalRequest._retry = true;
 
         if (isRefreshing) {
           return new Promise((resolve, reject) => {
             queue.push((token) => {
-              if (!token) {
-                reject(error);
-              }
+              if (!token) return reject(error);
               originalRequest.headers.Authorization = `Bearer ${token}`;
               resolve(api(originalRequest));
             });
@@ -54,6 +68,7 @@ export const setupInterceptors = (
         } catch (err) {
           processQueue(null);
           await logout();
+          window.location.href = "/login";
           return Promise.reject(err);
         } finally {
           isRefreshing = false;
@@ -61,6 +76,6 @@ export const setupInterceptors = (
       }
 
       return Promise.reject(error);
-    }
+    },
   );
 };
