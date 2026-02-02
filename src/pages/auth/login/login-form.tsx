@@ -5,7 +5,7 @@ import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Eye, EyeOff } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export function LoginForm({
   className,
@@ -19,6 +19,9 @@ export function LoginForm({
 
   const { login } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const from = location.state?.from?.pathname || "/";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,7 +30,8 @@ export function LoginForm({
 
     try {
       await login(email, password);
-      navigate("/");
+
+      navigate(from, { replace: true });
     } catch (err: any) {
       setError(err?.response?.data?.message || "Email atau kata sandi salah");
     } finally {

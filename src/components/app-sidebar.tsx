@@ -102,9 +102,9 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { user, isLoading } = useAuth();
+  const { user } = useAuth();
 
-  if (isLoading) return null;
+  if (!user) return null;
 
   return (
     <Sidebar collapsible="icon" {...props}>
