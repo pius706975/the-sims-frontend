@@ -27,19 +27,16 @@ export const setupInterceptors = (
     async (error) => {
       const originalRequest = error.config;
       const status = error.response?.status;
-      // const message = error.response?.data?.message;
+      const url = originalRequest.url || "";
 
-      const isRefreshRequest = originalRequest.url?.includes(
-        "/auth/create-new-access-token",
-      );
+      if (url.includes("/auth/signin")) {
+        return Promise.reject(error);
+      }
 
+      const isRefreshRequest = url.includes("/auth/create-new-access-token");
       if (isRefreshRequest && status === 401) {
-        console.warn("Refresh token expired or missing");
-
         await logout();
-
         window.location.href = "/login";
-
         return Promise.reject(error);
       }
 

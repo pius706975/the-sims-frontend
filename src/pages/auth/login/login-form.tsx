@@ -7,10 +7,10 @@ import { Eye, EyeOff } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { useLocation, useNavigate } from "react-router-dom";
 
-export function LoginForm({
+export const LoginForm = ({
   className,
   ...props
-}: React.ComponentProps<"form">) {
+}: React.ComponentProps<"form">) => {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -33,7 +33,13 @@ export function LoginForm({
 
       navigate(from, { replace: true });
     } catch (err: any) {
-      setError(err?.response?.data?.message || "Email atau kata sandi salah");
+      if (
+        err?.response?.status === 401 &&
+        err?.response?.data?.message === "email or password is incorrect"
+      ) {
+        setError("Email atau kata sandi salah");
+        setPassword("");
+      }
     } finally {
       setLoading(false);
     }
@@ -99,4 +105,4 @@ export function LoginForm({
       </FieldGroup>
     </form>
   );
-}
+};
