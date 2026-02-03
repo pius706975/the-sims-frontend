@@ -1,4 +1,5 @@
 import ButtonWithTooltip from "@/components/ButtonWithTooltip";
+import EmployeeTableSkeleton from "@/components/skeletons/EmployeeSkeleton";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -13,11 +14,19 @@ import { useEmployeesQuery } from "@/services/employee/employee.query";
 import { PencilIcon, Trash2 } from "lucide-react";
 
 const EmployeePage = () => {
-  const { data, isLoading, isError } = useEmployeesQuery();
+  const { data, isLoading, isError, error } = useEmployeesQuery();
 
   if (isLoading) {
-    return <div className="p-4">Loading data karyawan...</div>;
+    return <EmployeeTableSkeleton />;
   }
+
+  console.log(error?.response);
+
+  const errorMessage =
+    error?.response?.status === 400 &&
+    error?.response?.data?.message === "employee is empty"
+      ? "Data karyawan belum tersedia"
+      : "Gagal memuat data karyawan";
 
   return (
     <main>
@@ -64,11 +73,27 @@ const EmployeePage = () => {
             </TableRow>
           </TableHeader>
 
-          {isError ? (
-            <div className="p-4 text-red-500 text-center">Gagal memuat data</div>
-          ) : (
-            <TableBody>
-              {data?.data.map((emp) => (
+          <TableBody>
+            {isError ? (
+              <TableRow>
+                <TableCell
+                  colSpan={21}
+                  className="text-left text-gray-500 py-6"
+                >
+                  {errorMessage}
+                </TableCell>
+              </TableRow>
+            ) : data?.data.length === 0 ? (
+              <TableRow>
+                <TableCell
+                  colSpan={21}
+                  className="text-left text-gray-500 py-6"
+                >
+                  Data karyawan belum tersedia
+                </TableCell>
+              </TableRow>
+            ) : (
+              data?.data.map((emp) => (
                 <TableRow key={emp.employee_id}>
                   <TableCell className="whitespace-nowrap">
                     {emp.employee_number}
@@ -121,9 +146,9 @@ const EmployeePage = () => {
                     </div>
                   </TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          )}
+              ))
+            )}
+          </TableBody>
         </Table>
       </div>
     </main>
