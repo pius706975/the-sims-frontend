@@ -1,6 +1,9 @@
 import ButtonWithTooltip from "@/components/ButtonWithTooltip";
 import EmployeeTableSkeleton from "@/components/skeletons/EmployeeSkeleton";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -11,16 +14,18 @@ import {
 } from "@/components/ui/table";
 import { formatDateOnly, formatDateTime } from "@/lib/date.parser";
 import { useEmployeesQuery } from "@/services/employee/employee.query";
-import { PencilIcon, Trash2 } from "lucide-react";
+import { PencilIcon, PlusIcon, Trash2 } from "lucide-react";
+import { useState } from "react";
+import EmployeeForm from "./EmployeeForm";
+import { CloseButtonX, MagnifierIcon } from "@/assets/svg";
 
 const EmployeePage = () => {
   const { data, isLoading, isError, error } = useEmployeesQuery();
+  const [showForm, setShowForm] = useState<boolean>(false);
 
   if (isLoading) {
     return <EmployeeTableSkeleton />;
   }
-
-  console.log(error?.response);
 
   const errorMessage =
     error?.response?.status === 400 &&
@@ -30,11 +35,51 @@ const EmployeePage = () => {
 
   return (
     <main>
-      <div className="mb-4">
-        <Button variant="default" className="bg-[#1D7DBF] hover:bg-[#88B8D9]">
-          Tambah Karyawan
+      <div className="mb-4 flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+        <div className="flex-1 w-full">
+          <div className="relative">
+            <Input
+              type="text"
+              placeholder="Cari berdasarkan nama atau email"
+              className="w-full px-4 py-2.5 bg-white text-foreground placeholder-muted-foreground border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all"
+            />
+            <MagnifierIcon />
+          </div>
+        </div>
+
+        <Button
+          onClick={() => {
+            setShowForm(!showForm);
+          }}
+          variant="default"
+          className="bg-[#1D7DBF] hover:bg-[#0061a3]"
+        >
+          <PlusIcon /> Tambah Karyawan
         </Button>
       </div>
+
+      {/* Form Section */}
+      {showForm && (
+        <Card className="shadow-xl bg-white mb-5">
+          <div className="px-6">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-bold text-foreground">
+                Tambah Karyawan
+              </h2>
+              <button
+                onClick={() => setShowForm(false)}
+                className="text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <CloseButtonX />
+              </button>
+            </div>
+            <EmployeeForm
+              onSubmit={() => {}}
+              onCancel={() => setShowForm(false)}
+            />
+          </div>
+        </Card>
+      )}
 
       <div className="relative w-full overflow-x-auto border rounded-md">
         <Table className="min-w-max">
@@ -99,7 +144,14 @@ const EmployeePage = () => {
                     {emp.employee_number}
                   </TableCell>
                   <TableCell>{emp.full_name}</TableCell>
-                  <TableCell>{emp.gender}</TableCell>
+                  <TableCell>
+                    {emp.gender === "Male"
+                      ? "Laki-laki"
+                      : emp.gender === "Female"
+                        ? "Perempuan"
+                        : emp.gender}
+                  </TableCell>
+
                   <TableCell>{emp.birth_place}</TableCell>
                   <TableCell>{formatDateOnly(emp.birth_date)}</TableCell>
                   <TableCell>{emp.religion}</TableCell>
@@ -117,7 +169,15 @@ const EmployeePage = () => {
                   <TableCell>{emp.employment_status_name}</TableCell>
                   <TableCell>{emp.employee_type_name}</TableCell>
                   <TableCell>
-                    {emp.is_activated ? "Aktif" : "Nonaktif"}
+                    <Badge
+                      className={
+                        emp.is_activated
+                          ? "bg-[#1D7DBF] text-white"
+                          : "bg-gray-300 text-gray-800"
+                      }
+                    >
+                      {emp.is_activated ? "Aktif" : "Nonaktif"}
+                    </Badge>
                   </TableCell>
                   <TableCell>{formatDateTime(emp.created_at)}</TableCell>
                   <TableCell>{emp.created_by}</TableCell>

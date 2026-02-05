@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
-import EmployeeTypeForm from "./EmployeeType";
-import EmployeePage from "./Employee";
+import EmployeePage from "./employee/Employee";
+import EmploymentManagementPage from "./employmentManagement/EmploymentManagement";
 
 const MainEmployeeForm = () => {
   const tabs = [
@@ -11,9 +11,9 @@ const MainEmployeeForm = () => {
       content: <EmployeePage />,
     },
     {
-      value: "tipe_karyawan",
-      label: "Tipe Karyawan",
-      content: <EmployeeTypeForm />,
+      value: "manajemen kepegawaian",
+      label: "Manajemen Kepegawaian",
+      content: <EmploymentManagementPage />,
     },
   ];
 

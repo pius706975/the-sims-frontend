@@ -1,3 +1,6 @@
+// ==============================
+// Employee
+// ==============================
 export interface Employee {
   employee_id: string;
   employee_number: string;
@@ -25,6 +28,37 @@ export interface Employee {
 }
 
 export interface EmployeeResponse {
-    data: Employee[]
+  data: Employee[];
 }
 
+// ==============================
+// Employee Type
+// ==============================
+export interface EmployeeType {
+  employee_type_id: string;
+  employee_type_name: string;
+  created_at: string;
+  created_by: string;
+  updated_at: string;
+  updated_by: string;
+}
+
+export interface EmployeeTypeResponse {
+  data: EmployeeType[];
+}
+
+// ==============================
+// Employment Status
+// ==============================
+export interface EmployementStatus {
+  employment_status_id: string;
+  employment_status_name: string;
+  created_at: string;
+  created_by: string;
+  updated_at: string;
+  updated_by: string;
+}
+
+export interface EmployementStatusResponse {
+  data: EmployementStatus[];
+}

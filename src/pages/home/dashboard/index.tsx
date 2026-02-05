@@ -2,6 +2,7 @@ import AppBreadcrumb from "@/components/AppBreadcrumb";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Separator } from "@radix-ui/react-separator";
 import { useEffect } from "react";
+import DashboardPage from "./Dashboard";
 
 const Dashboard = () => {
   useEffect(() => {
@@ -18,15 +19,13 @@ const Dashboard = () => {
             className="mr-2 data-[orientation=vertical]:h-4"
           />
           <AppBreadcrumb
-            items={[
-              { label: "Beranda" },
-              { label: "Dashboard" },
-            ]}
+            items={[{ label: "Beranda" }, { label: "Dashboard" }]}
           />
         </div>
       </header>
-      <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-        <h1 className="text-center text-3xl">Dashboard is comming soon</h1>
+
+      <div className="flex flex-1 flex-col gap-4 p-6 pt-0">
+        <DashboardPage />
       </div>
     </main>
   );
