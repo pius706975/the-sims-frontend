@@ -1,5 +1,6 @@
 import ButtonWithTooltip from "@/components/ButtonWithTooltip";
 import EmployeeTableSkeleton from "@/components/skeletons/EmployeeSkeleton";
+import { Badge } from "@/components/ui/badge";
 import {
   Table,
   TableBody,
@@ -18,6 +19,9 @@ const EmployeeType = () => {
   if (isLoading) {
     return <EmployeeTableSkeleton />;
   }
+
+  console.log(data?.data);
+  
 
   const errorMessage =
     error?.response?.status === 400 &&
@@ -40,6 +44,7 @@ const EmployeeType = () => {
               {[
                 "ID",
                 "Jenis Kepegawaian",
+                "Status",
                 "Tanggal Dibuat",
                 "Dibuat Oleh",
                 "Tanggal Modifikasi",
@@ -83,6 +88,17 @@ const EmployeeType = () => {
                   </TableCell>
                   <TableCell className="whitespace-nowrap">
                     {empType.employee_type_name}
+                  </TableCell>
+                  <TableCell className="whitespace-nowrap">
+                    <Badge
+                      className={
+                        empType.is_active
+                          ? "bg-[#1D7DBF] text-white"
+                          : "bg-gray-300 text-gray-800"
+                      }
+                    >
+                      {empType.is_active ? "Aktif" : "Nonaktif"}
+                    </Badge>
                   </TableCell>
                   <TableCell className="whitespace-nowrap">
                     {formatDateTime(empType.created_at)}

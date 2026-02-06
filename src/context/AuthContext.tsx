@@ -5,6 +5,7 @@ import {
   useState,
   useCallback,
   useEffect,
+  useRef,
 } from "react";
 import { jwtDecode } from "jwt-decode";
 
@@ -27,9 +28,12 @@ interface AuthContextType {
   user: AuthUser | null;
   isAuthenticated: boolean;
   isLoading: boolean;
+
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
-  setAccessToken: (token: string | null) => void;
+
+  getAccessToken: () => string | null;
+  handleTokenUpdate: (token: string | null) => void;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -63,15 +67,37 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     setAuthFromToken(res.access_token);
   };
 
+  const accessTokenRef = useRef<string | null>(null);
+
   const setAuthFromToken = (token: string) => {
     const payload = jwtDecode<JwtPayload>(token);
 
+    accessTokenRef.current = token;
     setAccessToken(token);
+
     setUser({
       name: payload.name,
       email: payload.email,
     });
   };
+
+  const handleTokenUpdate = (token: string | null) => {
+    accessTokenRef.current = token;
+    setAccessToken(token);
+
+    if (!token) {
+      setUser(null);
+      return;
+    }
+
+    const payload = jwtDecode<JwtPayload>(token);
+    setUser({
+      name: payload.name,
+      email: payload.email,
+    });
+  };
+
+  const getAccessToken = () => accessTokenRef.current;
 
   const logout = useCallback(async () => {
     try {
@@ -79,6 +105,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     } catch {
       // do nothing
     } finally {
+      accessTokenRef.current = null;
       setAccessToken(null);
       setUser(null);
       setIsLoading(false);
@@ -94,7 +121,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         isLoading,
         login,
         logout,
-        setAccessToken,
+        getAccessToken,
+        handleTokenUpdate,
       }}
     >
       {children}

@@ -11,6 +11,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  useEmployeeTypesQuery,
+  useEmploymentStatusQuery,
+} from "@/services/employee/employee.query";
 
 interface EmployeeFormProps {
   initialData?: {
@@ -28,40 +32,31 @@ interface EmployeeFormProps {
   isEditing?: boolean;
 }
 
-const mandatorySign = <span className="text-red-500">*</span>;
-
-const religion = [
-  {
-    option: "Islam",
-    value: "Islam",
-  },
-  {
-    option: "Protestan",
-    value: "Protestan",
-  },
-  {
-    option: "Katolik",
-    value: "Katolik",
-  },
-  {
-    option: "Hindu",
-    value: "Hindu",
-  },
-  {
-    option: "Buddha",
-    value: "Buddha",
-  },
-  {
-    option: "Khonghucu",
-    value: "Khonghucu",
-  },
-];
-
 export default function EmployeeForm({
   initialData,
   onSubmit,
   onCancel,
 }: EmployeeFormProps) {
+  const {
+    data: employeeTypesData,
+    isLoading: isEmployeeTypesLoading,
+    isError: isEmployeeTypesError,
+    error: employeeTypesError,
+  } = useEmployeeTypesQuery();
+
+  const {
+    data: employmentStatusData,
+    isLoading: isEmploymentStatusLoading,
+    isError: isEmploymentStatusError,
+    error: employmentStatusError,
+  } = useEmploymentStatusQuery();
+
+  const filteredEmployeeTypes =
+    employeeTypesData?.data.filter((item) => item.is_active) || [];
+
+  const filteredEmploymentStatuses =
+    employmentStatusData?.data.filter((item) => item.is_active) || [];
+
   return (
     <div className="space-y-6">
       <div>
@@ -200,15 +195,52 @@ export default function EmployeeForm({
             <Label>Jenis Kepegawaian {mandatorySign}</Label>
             <Select>
               <SelectTrigger className="w-full">
-                <SelectValue placeholder="Pilih status" />
+                <SelectValue placeholder="Pilih Jenis kepegawaian" />
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
-                  <SelectItem value="Single">Single</SelectItem>
-                  <SelectItem value="Married">Menikah</SelectItem>
+                  {filteredEmployeeTypes.map((item) => (
+                    <SelectItem
+                      key={item.employee_type_id}
+                      value={item.employee_type_id}
+                    >
+                      {item.employee_type_name}
+                    </SelectItem>
+                  ))}
                 </SelectGroup>
               </SelectContent>
             </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label>Jenis Kepegawaian {mandatorySign}</Label>
+            <Select>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Pilih Jenis kepegawaian" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  {filteredEmploymentStatuses.map((item) => (
+                    <SelectItem
+                      key={item.employment_status_id}
+                      value={item.employment_status_id}
+                    >
+                      {item.employment_status_name}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label>Tanggal Bergabung {mandatorySign}</Label>
+            <DatePickerSimple />
+          </div>
+
+          <div className="space-y-2">
+            <Label>Tanggal Keluar {mandatorySign}</Label>
+            <DatePickerSimple />
           </div>
         </div>
       </div>
@@ -236,3 +268,32 @@ export default function EmployeeForm({
     </div>
   );
 }
+
+const mandatorySign = <span className="text-red-500">*</span>;
+
+const religion = [
+  {
+    option: "Islam",
+    value: "Islam",
+  },
+  {
+    option: "Protestan",
+    value: "Protestan",
+  },
+  {
+    option: "Katolik",
+    value: "Katolik",
+  },
+  {
+    option: "Hindu",
+    value: "Hindu",
+  },
+  {
+    option: "Buddha",
+    value: "Buddha",
+  },
+  {
+    option: "Khonghucu",
+    value: "Khonghucu",
+  },
+];

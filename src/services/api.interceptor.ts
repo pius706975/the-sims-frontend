@@ -11,7 +11,7 @@ const processQueue = (token: string | null) => {
 
 export const setupInterceptors = (
   getAccessToken: () => string | null,
-  setAccessToken: (token: string | null) => void,
+  handleTokenUpdate: (token: string | null) => void,
   logout: () => Promise<void>,
 ) => {
   api.interceptors.request.use((config) => {
@@ -57,7 +57,7 @@ export const setupInterceptors = (
 
         try {
           const res = await AuthService.refresh();
-          setAccessToken(res.access_token);
+          handleTokenUpdate(res.access_token);
           processQueue(res.access_token);
 
           originalRequest.headers.Authorization = `Bearer ${res.access_token}`;

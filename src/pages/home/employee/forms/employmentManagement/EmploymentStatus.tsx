@@ -1,6 +1,14 @@
 import ButtonWithTooltip from "@/components/ButtonWithTooltip";
 import EmployeeTableSkeleton from "@/components/skeletons/EmployeeSkeleton";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { formatDateTime } from "@/lib/date.parser";
 import { useEmploymentStatusQuery } from "@/services/employee/employee.query";
 import { PencilIcon } from "lucide-react";
@@ -11,6 +19,8 @@ const EmploymentStatus = () => {
   if (isLoading) {
     return <EmployeeTableSkeleton />;
   }
+
+  console.log(data);
 
   const errorMessage =
     error?.response?.status === 400 &&
@@ -33,6 +43,7 @@ const EmploymentStatus = () => {
               {[
                 "ID",
                 "Status Kepegawaian",
+                "Status",
                 "Tanggal Dibuat",
                 "Dibuat Oleh",
                 "Tanggal Modifikasi",
@@ -76,6 +87,17 @@ const EmploymentStatus = () => {
                   </TableCell>
                   <TableCell className="whitespace-nowrap">
                     {empStat.employment_status_name}
+                  </TableCell>
+                  <TableCell className="whitespace-nowrap">
+                    <Badge
+                      className={
+                        empStat.is_active
+                          ? "bg-[#1D7DBF] text-white"
+                          : "bg-gray-300 text-gray-800"
+                      }
+                    >
+                      {empStat.is_active ? "Aktif" : "Nonaktif"}
+                    </Badge>
                   </TableCell>
                   <TableCell className="whitespace-nowrap">
                     {formatDateTime(empStat.created_at)}

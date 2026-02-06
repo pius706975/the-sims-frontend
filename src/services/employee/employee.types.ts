@@ -37,6 +37,7 @@ export interface EmployeeResponse {
 export interface EmployeeType {
   employee_type_id: string;
   employee_type_name: string;
+  is_active: boolean;
   created_at: string;
   created_by: string;
   updated_at: string;
@@ -53,6 +54,7 @@ export interface EmployeeTypeResponse {
 export interface EmployementStatus {
   employment_status_id: string;
   employment_status_name: string;
+  is_active: boolean;
   created_at: string;
   created_by: string;
   updated_at: string;
